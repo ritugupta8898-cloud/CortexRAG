@@ -3,6 +3,11 @@
 Production-style Retrieval-Augmented Generation (RAG) system for research papers featuring semantic search, query expansion, persistent vector storage, contextual retrieval, and local LLM-powered response generation using FastAPI, ChromaDB, and HuggingFace embeddings.
 
 ---
+## Demo
+
+### API Response Example
+
+![CortexRAG Demo]("/Users/pratyushgupta/Documents/rag/assets/image.png")
 
 # Features
 

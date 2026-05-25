@@ -4,25 +4,28 @@ from langchain_ollama import ChatOllama
 llm = ChatOllama(
     model="llama3"
 )
-def expand_query(query:str):
-    prompt = f"""
-You are an expert query expansion system for research paper retrieval.
+def expand_query(query:str, anchor_context=None):
+   
 
-Generate 3 to 5 highly effective semantic search queries.
+
+
+    prompt = f"""
+You are a retrieval query expansion system.
+
+Original Query:
+{query}
+
+Relevant Context:
+{anchor_context}
+
+Generate 3 semantic search queries.
 
 Rules:
-- Focus on technical meaning
-- Include related terminology
-- Break comparisons into subtopics
-- Keep each query concise
-- Queries should help retrieve research paper chunks
-- Return ONLY the queries
-- One query per line
-- No numbering
-- No explanations
-
-User Query:
-{query}
+- Preserve technical terminology
+- Use the context to disambiguate abbreviations
+- Never invent meanings
+- Keep queries concise
+- Return only queries
 """
 
     response = llm.invoke(prompt)
@@ -33,5 +36,5 @@ User Query:
         for q in queries
         if q.strip()
     ]
-
+    
     return queries

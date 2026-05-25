@@ -2,6 +2,7 @@ import os
 from source.dataloader import pdf_loader
 from source.splitter import text_split
 from source.vectordb import vectordb
+from source.splitter import clean_chunks
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,6 +21,7 @@ def loadall_documents(folder_path: str):
 doc = loadall_documents("/Users/pratyushgupta/Documents/rag/data")
 
 chunked = text_split(doc)
+chunks = clean_chunks(chunks)
 vectordb(chunked)
 
 

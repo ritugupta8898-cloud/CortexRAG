@@ -19,6 +19,7 @@ Rules:
 - Be concise but technically accurate
 - If the answer is not in the context, say so
 - Do not hallucinate information
+- Write the answer purely from context and form the sentences clearly 
 
 Context:
 {context}
