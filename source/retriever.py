@@ -10,7 +10,7 @@ def retrieve(db, query: str):
         query,
         k=1
     )
-    print(initial_results)
+   
     anchor_doc, initial_score = initial_results[0]
 
     if len(query.split()) <= 4 and initial_score < 0.35:

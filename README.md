@@ -87,7 +87,7 @@ ingest.py
 ## Retrieval Evaluation
 
 CortexRAG includes a lightweight retrieval evaluation framework for benchmarking semantic retrieval quality across technical research queries.
-
+(Benchmarked on 400/80)
 ### Current Benchmark Results
 
 | Metric | Score |
