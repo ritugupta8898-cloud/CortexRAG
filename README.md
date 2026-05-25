@@ -84,6 +84,70 @@ ingest.py
 ```
 
 ---
+## Retrieval Evaluation
+
+CortexRAG includes a lightweight retrieval evaluation framework for benchmarking semantic retrieval quality across technical research queries.
+
+### Current Benchmark Results
+
+| Metric | Score |
+|---|---|
+| Top-1 Retrieval Accuracy | 75% |
+| Top-3 Coverage Accuracy | 75% |
+| Average Retrieval Score | 0.5679 |
+| Total Indexed Chunks | 2320 |
+
+## Chunking Strategy Experiments
+
+Different chunking configurations were evaluated using the retrieval benchmark framework.
+
+| Chunk Size | Overlap | Top-1 Accuracy | Top-3 Coverage | Avg Retrieval Score |
+|---|---|---|---|---|
+| 400 | 80 | 75% | 75% | 0.5679 |
+| 550 | 90 | 100% | 100% | 0.5714 |
+| 600 | 100 | 100% | 100% | 0.5396 |
+| 700 | 120 | 100% | 100% | 0.5981 |
+
+### Key Findings
+
+- Larger chunks improved comparison-query retrieval performance
+- Smaller chunks improved specificity but occasionally reduced retrieval coverage
+- Excessively large chunks introduced semantic retrieval noise
+- 600/100 produced the best balance between semantic precision and contextual completeness
+- Chunking strategy had a measurable impact on retrieval grounding quality
+
+### Evaluation Queries
+
+| Query | Expected Sources |
+|---|---|
+| What is LoRA? | lora.pdf |
+| What is BERT? | bert.pdf |
+| Differentiate between LoRA and BERT? | lora.pdf, bert.pdf |
+| What is GPT-3? | gpt3.pdf |
+
+### Key Observations
+
+- Multi-query semantic retrieval improved retrieval coverage for technical queries
+- Smaller chunk sizes improved retrieval specificity but occasionally reduced contextual completeness
+- Comparison-style queries were significantly harder than single-concept retrieval
+- Query expansion improved grounding for abbreviation-heavy queries such as “LoRA”
+- Retrieval debugging exposed semantic drift and noisy neighbor issues during experimentation
+
+### Evaluation Framework
+
+The evaluation pipeline benchmarks:
+
+- Top-1 retrieval accuracy
+- Top-3 retrieval coverage
+- Average retrieval similarity score
+- Multi-document retrieval behavior
+
+The framework was used to compare:
+- chunking strategies
+- overlap sizes
+- query expansion behavior
+- retrieval filtering logic
+
 
 ## Key Engineering Challenges
 
@@ -119,7 +183,14 @@ These experiments helped improve understanding of:
 - Grounding vs hallucination dynamics in RAG systems
 
 ---
+## Failure Cases
 
+Observed retrieval failure modes included:
+
+- semantic drift during query expansion
+- noisy retrieval from large chunks
+- abbreviation ambiguity in technical queries
+- context dilution from excessive chunk overlap
 ## Setup
 
 ### Clone Repository

@@ -25,7 +25,7 @@ def clean_chunks(chunks):
 
     return filtered_chunks
 
-def text_split(docs, chunk_size=400, chunk_overlap=80):
+def text_split(docs, chunk_size=500, chunk_overlap=90):
 
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=chunk_size,

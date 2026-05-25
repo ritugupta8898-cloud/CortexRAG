@@ -21,8 +21,8 @@ def loadall_documents(folder_path: str):
 doc = loadall_documents("/Users/pratyushgupta/Documents/rag/data")
 
 chunked = text_split(doc)
-chunks = clean_chunks(chunks)
-vectordb(chunked)
+chunks = clean_chunks(chunked)
+vectordb(chunks)
 
 
 
