@@ -75,7 +75,27 @@ vector_store/
 
 ingest.py
 ```
+# Retrieval Engineering Learnings
 
+During development, multiple retrieval-quality issues emerged that required iterative experimentation and debugging.
+
+Key observations and improvements included:
+
+- Query expansion occasionally caused semantic drift and hallucinated technical terminology
+- Multi-query retrieval introduced duplicate and low-relevance chunks
+- Retrieval quality varied significantly with chunk size and overlap tuning
+- Short technical queries (e.g., “What is LoRA?”) required different handling compared to descriptive queries
+- Anchor-based query expansion was explored to stabilize abbreviation-heavy retrieval
+- Context filtering and deduplication logic were refined to improve grounding quality
+- Grounded generation prompts were added to reduce hallucinations from the local LLM
+- Retrieval scores and chunk previews were exposed through the API for debugging and observability
+
+These experiments helped improve understanding of:
+- semantic vector search behavior
+- embedding similarity limitations
+- retrieval ranking instability
+- query expansion tradeoffs
+- grounding vs hallucination dynamics in RAG systems
 # Setup
 
 ## Clone Repository
