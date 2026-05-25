@@ -7,7 +7,7 @@ Production-style Retrieval-Augmented Generation (RAG) system for research papers
 
 ### API Response Example
 
-![CortexRAG Demo]("/Users/pratyushgupta/Documents/rag/assets/image.png")
+![CortexRAG Demo](assets/image.png)
 
 # Features
 
