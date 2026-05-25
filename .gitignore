@@ -1,0 +1,12 @@
+(venv) pratyushgupta@Pratyushs-MacBook-Air rag % venv/
+__pycache__/
+.env
+vector_store/
+*.pyc
+.DS_Store
+zsh: no such file or directory: venv/
+zsh: permission denied: __pycache__/
+zsh: command not found: .env
+zsh: permission denied: vector_store/
+zsh: no matches found: *.pyc
+(venv) pratyushgupta@Pratyushs-MacBook-Air rag % 
