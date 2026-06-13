@@ -1,6 +1,6 @@
 # CortexRAG
 
-Production-style Retrieval-Augmented Generation (RAG) system for research papers featuring semantic search, query expansion, persistent vector storage, contextual retrieval, and local LLM-powered response generation using FastAPI, ChromaDB, and HuggingFace embeddings.
+A local RAG pipeline for chatting with research papers. I built this with FastAPI, Llama 3, and ChromaDB specifically to figure out why out-of-the-box semantic search usually sucks for dense technical documents, and how to fix it.
 
 Focused heavily on retrieval quality, semantic search behavior, grounding reliability, and retrieval debugging workflows for research-oriented RAG systems.
 
@@ -45,20 +45,14 @@ FastAPI API Response
 ```
 
 ---
+##Tech Stack
+Vector DB: ChromaDB & HuggingFace Embeddings (kept local for fast iteration).
 
-## Tech Stack
+LLM Generation: Ollama (Llama 3) to prevent API costs from blowing up during testing.
 
-- Python
-- FastAPI
-- ChromaDB
-- LangChain
-- HuggingFace Embeddings
-- Ollama
-- Llama3
-- Semantic Search
-- Vector Databases
+Backend: FastAPI to serve the retrieval and chat endpoints.
 
----
+Orchestration: LangChain for multi-query expansion and context formatting
 
 ## Project Structure
 
@@ -108,30 +102,6 @@ Different chunking configurations were evaluated using the retrieval benchmark f
 | 600 | 100 | 100% | 100% | 0.5396 |
 | 700 | 120 | 100% | 100% | 0.5981 |
 
-### Key Findings
-
-- Larger chunks improved comparison-query retrieval performance
-- Smaller chunks improved specificity but occasionally reduced retrieval coverage
-- Excessively large chunks introduced semantic retrieval noise
-- 600/100 produced the best balance between semantic precision and contextual completeness
-- Chunking strategy had a measurable impact on retrieval grounding quality
-
-### Evaluation Queries
-
-| Query | Expected Sources |
-|---|---|
-| What is LoRA? | lora.pdf |
-| What is BERT? | bert.pdf |
-| Differentiate between LoRA and BERT? | lora.pdf, bert.pdf |
-| What is GPT-3? | gpt3.pdf |
-
-### Key Observations
-
-- Multi-query semantic retrieval improved retrieval coverage for technical queries
-- Smaller chunk sizes improved retrieval specificity but occasionally reduced contextual completeness
-- Comparison-style queries were significantly harder than single-concept retrieval
-- Query expansion improved grounding for abbreviation-heavy queries such as “LoRA”
-- Retrieval debugging exposed semantic drift and noisy neighbor issues during experimentation
 
 ### Evaluation Framework
 
@@ -149,48 +119,19 @@ The framework was used to compare:
 - retrieval filtering logic
 
 
-## Key Engineering Challenges
+## The Hard Parts & What i  Learned
+Building this made me realize that vector databases aren't magic. 90% of making RAG work isn't the LLM—it's writing good filtering logic and tuning your chunk sizes. Here are the main issues I ran into and fixed:
 
-- Preventing semantic drift during query expansion
-- Reducing noisy retrieval from vector similarity search
-- Balancing chunk size vs retrieval precision
-- Improving grounding quality for local LLM generation
-- Handling short technical queries with abbreviation-heavy terminology
+Acronyms break vector search: Asking "What is LoRA?" kept failing because the embedding for "LoRA" doesn't map cleanly to chunks explaining "Low-Rank Adaptation". I implemented an LLM-powered query expansion step to spell out acronyms before hitting ChromaDB.
 
----
+Comparison questions are a nightmare: Asking the system to "Differentiate between LoRA and BERT" usually failed because no single text chunk contains both. I had to build a multi-query retrieval system to fetch chunks for both concepts independently and aggregate them.
 
-## Retrieval Engineering Learnings
+Chunking tradeoffs: After benchmarking, 600 tokens with a 100-token overlap was the sweet spot. Anything smaller lost context, and anything bigger pulled in way too much noise that hallucinated the LLM.
 
-During development, multiple retrieval-quality issues emerged that required iterative experimentation and debugging.
+Semantic drift during expansion: Sometimes the query expansion step would hallucinate technical terminology before the search even started. I had to strictly constrain the expansion prompt to prevent semantic drift.
 
-Key observations and improvements included:
 
-- Query expansion occasionally caused semantic drift and hallucinated technical terminology
-- Multi-query retrieval introduced duplicate and low-relevance chunks
-- Retrieval quality varied significantly with chunk size and overlap tuning
-- Short technical queries (e.g., “What is LoRA?”) required different handling compared to descriptive queries
-- Context-assisted query expansion was explored for abbreviation-heavy retrieval
-- Context filtering and deduplication logic were refined to improve grounding quality
-- Grounded generation prompts were added to reduce hallucinations from the local LLM
-- Retrieval scores and chunk previews were exposed through the API for debugging and observability
 
-These experiments helped improve understanding of:
-
-- Semantic vector search behavior
-- Embedding similarity limitations
-- Retrieval ranking instability
-- Query expansion tradeoffs
-- Grounding vs hallucination dynamics in RAG systems
-
----
-## Failure Cases
-
-Observed retrieval failure modes included:
-
-- semantic drift during query expansion
-- noisy retrieval from large chunks
-- abbreviation ambiguity in technical queries
-- context dilution from excessive chunk overlap
 ## Setup
 
 ### Clone Repository
@@ -257,14 +198,11 @@ to help analyze retrieval quality and grounding behavior.
 
 ## Future Improvements
 
-- Hybrid Retrieval
-- Cross-Encoder Reranking
-- Metadata Filtering
-- Conversational Memory
-- Frontend UI
-- Streaming Responses
-- Evaluation Metrics
+Cross-Encoder Reranking: Right now, ChromaDB's raw similarity scores aren't always perfect. I want to add a cross-encoder to re-rank the top 10 chunks before feeding them to Llama 3.
 
+Hybrid Retrieval: BM25 keyword search combined with vector search would completely solve the abbreviation issue mentioned above.
+
+Streaming Responses: Hook up FastAPI's streaming response so the UI doesn't hang while Llama 3 generates the answer.
 ---
 
 ## Example Use Cases
