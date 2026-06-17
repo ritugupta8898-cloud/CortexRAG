@@ -22,12 +22,13 @@ db = Chroma(
 
 @app.get("/chat")
 def get_response(query: str):
+    query = sanitize_input(query)
 
     retrieved_docs = retrieve(
         db,
         query
     )
-
+    
     docs = [
         item["document"]
         for item in retrieved_docs
@@ -40,7 +41,6 @@ def get_response(query: str):
 
     return {
         "response": response,
-
         "retrieved_context": [
             {
                 "source": item["source"],
