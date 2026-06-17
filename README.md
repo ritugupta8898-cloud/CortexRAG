@@ -196,14 +196,7 @@ to help analyze retrieval quality and grounding behavior.
 
 ---
 
-## Future Improvements
 
-Cross-Encoder Reranking: Right now, ChromaDB's raw similarity scores aren't always perfect. I want to add a cross-encoder to re-rank the top 10 chunks before feeding them to Llama 3.
-
-Hybrid Retrieval: BM25 keyword search combined with vector search would completely solve the abbreviation issue mentioned above.
-
-Streaming Responses: Hook up FastAPI's streaming response so the UI doesn't hang while Llama 3 generates the answer.
----
 
 ## Example Use Cases
 
